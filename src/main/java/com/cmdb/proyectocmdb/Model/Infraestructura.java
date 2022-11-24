@@ -1,15 +1,11 @@
 package com.cmdb.proyectocmdb.Model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -26,11 +22,6 @@ public class Infraestructura implements Serializable {
     private String plataforma;
     private String responsable;
     private String os;
-
-    @ManyToMany
-    @JoinTable(name = "infraestructura_cliente", joinColumns = @JoinColumn(name = "infraestructura_id"), inverseJoinColumns = @JoinColumn(name = "cliente_id"))
-
-    private List<Cliente> clientes;// =new HashSet<>();
 
     public Long getIdInfraestructura() {
         return idInfraestructura;
@@ -94,14 +85,6 @@ public class Infraestructura implements Serializable {
 
     public void setOs(String os) {
         this.os = os;
-    }
-
-    public List<Cliente> getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
     }
 
 }

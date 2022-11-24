@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cmdb.proyectocmdb.Model.Cliente;
+import com.cmdb.proyectocmdb.Model.Infraestructura;
 import com.cmdb.proyectocmdb.Repository.ClienteRepository;
+import com.cmdb.proyectocmdb.Repository.InfraestructuraRepository;
 
 @Service
 public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteService;
+    @Autowired
+    private InfraestructuraRepository infraestructuraService;
 
     public List<Cliente> getAll() {
         return clienteService.getAll();
@@ -25,12 +29,28 @@ public class ClienteService {
 
     public Cliente save(Cliente prod) {
         if (prod.getIdCliente() == null) {
-            return clienteService.save(prod);
+            if (prod.getInfraestructura() != null) {
+                Optional<Infraestructura> infr = infraestructuraService
+                        .getId(prod.getInfraestructura().get(0).getIdInfraestructura());
+                if (!infr.isEmpty()) {
+                    return clienteService.save(prod);
+                }
+            } else {
+                return clienteService.save(prod);
+            }
 
         } else {
             Optional<Cliente> pro = clienteService.getId(prod.getIdCliente());
             if (pro.isEmpty()) {
-                return clienteService.save(prod);
+                if (prod.getInfraestructura() != null) {
+                    Optional<Infraestructura> infr = infraestructuraService
+                            .getId(prod.getInfraestructura().get(0).getIdInfraestructura());
+                    if (!infr.isEmpty()) {
+                        return clienteService.save(prod);
+                    }
+                } else {
+                    return clienteService.save(prod);
+                }
             }
         }
         return prod;
@@ -42,6 +62,9 @@ public class ClienteService {
             if (!pro.isEmpty()) {
                 if (prod.getCliente() != null) {
                     pro.get().setCliente(prod.getCliente());
+                }
+                if (prod.getInfraestructura() != null) {
+                    pro.get().setInfraestructura(prod.getInfraestructura());
                 }
                 return clienteService.save(pro.get());
             }
