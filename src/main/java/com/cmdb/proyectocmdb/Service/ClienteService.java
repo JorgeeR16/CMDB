@@ -27,6 +27,10 @@ public class ClienteService {
         return clienteService.getId(id);
     }
 
+    public List<Cliente> getByCliente(String cli) {
+        return clienteService.getByCliente(cli);
+    }
+
     public Cliente save(Cliente prod) {
         if (prod.getIdCliente() == null) {
             if (prod.getInfraestructura() != null) {

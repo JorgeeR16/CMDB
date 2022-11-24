@@ -48,6 +48,12 @@ public class ClienteController {
         return clienteController.getId(id);
     }
 
+    @GetMapping("/campana/{cliente}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Cliente> getByCliente(@PathVariable("cliente") String cli) {
+        return clienteController.getByCliente(cli);
+    }
+
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente save(@RequestBody Cliente pro) {

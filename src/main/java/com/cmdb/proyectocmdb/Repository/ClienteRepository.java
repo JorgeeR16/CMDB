@@ -31,4 +31,8 @@ public class ClienteRepository {
         clienteCRUD.delete(id);
     }
 
+    public List<Cliente> getByCliente(String client) {
+        return clienteCRUD.search(client);
+    }
+
 }
