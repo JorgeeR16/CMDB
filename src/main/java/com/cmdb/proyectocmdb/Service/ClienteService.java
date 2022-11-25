@@ -18,6 +18,8 @@ public class ClienteService {
     private ClienteRepository clienteService;
     @Autowired
     private InfraestructuraRepository infraestructuraService;
+    private int i = 0;
+    private Long number;
 
     public List<Cliente> getAll() {
         return clienteService.getAll();
@@ -29,6 +31,10 @@ public class ClienteService {
 
     public List<Cliente> getByCliente(String cli) {
         return clienteService.getByCliente(cli);
+    }
+
+    public List<Cliente> getIp(String ip) {
+        return clienteService.findIp(ip);
     }
 
     public Cliente save(Cliente prod) {
@@ -61,6 +67,8 @@ public class ClienteService {
     }
 
     public Cliente update(Cliente prod) {
+
+        // SE CONSULTA POR ID, para actualizar un nombre si toca con el id
         if (prod.getIdCliente() != null) {
             Optional<Cliente> pro = clienteService.getId(prod.getIdCliente());
             if (!pro.isEmpty()) {
@@ -68,6 +76,29 @@ public class ClienteService {
                     pro.get().setCliente(prod.getCliente());
                 }
                 if (prod.getInfraestructura() != null) {
+                    i = 0;
+                    for (Infraestructura ip : prod.getInfraestructura()) {
+                        number = infraestructuraService.findIp(ip.getIp()).get(0).getIdInfraestructura();
+                        prod.getInfraestructura().get(i).setIdInfraestructura(number);
+                        i++;
+                    }
+                    pro.get().setInfraestructura(prod.getInfraestructura());
+                }
+                return clienteService.save(pro.get());
+            }
+        }
+        // SE CONSULTA POR CLIENTE
+        if (prod.getCliente() != null) {
+            Optional<Cliente> pro = clienteService
+                    .getId(clienteService.getByCliente(prod.getCliente()).get(0).getIdCliente());
+            if (!pro.isEmpty()) {// desde aqui
+                if (prod.getInfraestructura() != null) {
+                    i = 0;
+                    for (Infraestructura ip : prod.getInfraestructura()) {
+                        number = infraestructuraService.findIp(ip.getIp()).get(0).getIdInfraestructura();
+                        prod.getInfraestructura().get(i).setIdInfraestructura(number);
+                        i++;
+                    }
                     pro.get().setInfraestructura(prod.getInfraestructura());
                 }
                 return clienteService.save(pro.get());

@@ -18,6 +18,10 @@ public class InfraestructuraService {
         return infraestructuraService.getAll();
     }
 
+    public List<Infraestructura> getByIp(String ip) {
+        return infraestructuraService.findIp(ip);
+    }
+
     public Optional<Infraestructura> getId(Long id) {
         return infraestructuraService.getId(id);
     }

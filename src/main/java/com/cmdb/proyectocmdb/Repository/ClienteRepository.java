@@ -32,7 +32,11 @@ public class ClienteRepository {
     }
 
     public List<Cliente> getByCliente(String client) {
-        return clienteCRUD.search(client);
+        return clienteCRUD.findByClienteContaining(client);
+    }
+
+    public List<Cliente> findIp(String ip) {
+        return clienteCRUD.findIp(ip);
     }
 
 }

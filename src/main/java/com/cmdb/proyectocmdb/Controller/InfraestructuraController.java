@@ -49,6 +49,12 @@ public class InfraestructuraController {
         return infraestructuraController.getId(id);
     }
 
+    @GetMapping("/ip/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Infraestructura> getById(@PathVariable("id") String id) {
+        return infraestructuraController.getByIp(id);
+    }
+
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public Infraestructura save(@RequestBody Infraestructura cat) {

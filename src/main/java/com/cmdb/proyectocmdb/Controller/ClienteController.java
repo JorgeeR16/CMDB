@@ -54,6 +54,12 @@ public class ClienteController {
         return clienteController.getByCliente(cli);
     }
 
+    @GetMapping("/ip/{ip}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Cliente> getIp(@PathVariable("ip") String ip) {
+        return clienteController.getIp(ip);
+    }
+
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente save(@RequestBody Cliente pro) {

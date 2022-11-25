@@ -31,4 +31,8 @@ public class InfraestructuraRepository {
         infraestructuraCRUD.delete(cat);
     }
 
+    public List<Infraestructura> findIp(String ip) {
+        return infraestructuraCRUD.findByIpContaining(ip);
+    }
+
 }
