@@ -32,9 +32,41 @@ public class InfraestructuraService {
 
     public Infraestructura update(Infraestructura cat) {
 
+        // con ID
         if (cat.getIdInfraestructura() != null) {
 
             Optional<Infraestructura> pca = infraestructuraService.getId(cat.getIdInfraestructura());
+            if (!pca.isEmpty()) {
+                if (pca.get().getHostname() != null) {
+                    pca.get().setHostname(cat.getHostname());
+                }
+                if (pca.get().getIp() != null) {
+                    pca.get().setIp(cat.getIp());
+                }
+                if (pca.get().getTipoEquipo() != null) {
+                    pca.get().setTipoEquipo(cat.getTipoEquipo());
+                }
+                if (pca.get().getRolServicio() != null) {
+                    pca.get().setRolServicio(cat.getRolServicio());
+                }
+                if (pca.get().getPlataforma() != null) {
+                    pca.get().setPlataforma(cat.getPlataforma());
+                }
+                if (pca.get().getResponsable() != null) {
+                    pca.get().setResponsable(cat.getResponsable());
+                }
+                if (pca.get().getOs() != null) {
+                    pca.get().setOs(cat.getOs());
+                }
+                return infraestructuraService.save(pca.get());
+            }
+        }
+
+        // con IP
+        if (cat.getIp() != null) {
+
+            Optional<Infraestructura> pca = infraestructuraService
+                    .getId(infraestructuraService.findIp(cat.getIp()).get(0).getIdInfraestructura());
             if (!pca.isEmpty()) {
                 if (pca.get().getHostname() != null) {
                     pca.get().setHostname(cat.getHostname());
