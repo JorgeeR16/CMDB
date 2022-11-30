@@ -39,4 +39,7 @@ public class ClienteRepository {
         return clienteCRUD.findIp(ip);
     }
 
+    public boolean existCliente(String client) {
+        return clienteCRUD.existsByCliente(client);
+    }
 }

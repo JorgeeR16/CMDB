@@ -32,7 +32,7 @@ public class InfraestructuraRepository {
     }
 
     public List<Infraestructura> findIp(String ip) {
-        return infraestructuraCRUD.findByIpContaining(ip);
+        return infraestructuraCRUD.findByIpLike(ip);
     }
 
 }

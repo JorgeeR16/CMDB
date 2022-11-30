@@ -71,9 +71,6 @@ public class InfraestructuraService {
                 if (pca.get().getHostname() != null) {
                     pca.get().setHostname(cat.getHostname());
                 }
-                if (pca.get().getIp() != null) {
-                    pca.get().setIp(cat.getIp());
-                }
                 if (pca.get().getTipoEquipo() != null) {
                     pca.get().setTipoEquipo(cat.getTipoEquipo());
                 }
@@ -103,5 +100,5 @@ public class InfraestructuraService {
         }
         return false;
     }
-
+    // falta borrar por ip
 }

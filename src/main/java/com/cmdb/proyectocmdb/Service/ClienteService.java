@@ -1,5 +1,6 @@
 package com.cmdb.proyectocmdb.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,8 @@ public class ClienteService {
     private InfraestructuraRepository infraestructuraService;
     private int i = 0;
     private Long number;
+    private int conteo;
+    private ArrayList<Infraestructura> ipNoRepetidas = new ArrayList<Infraestructura>();
 
     public List<Cliente> getAll() {
         return clienteService.getAll();
@@ -37,7 +40,7 @@ public class ClienteService {
         return clienteService.findIp(ip);
     }
 
-    public Cliente save(Cliente prod) {
+    public Cliente save(Cliente prod) {// Validar por nombre si ya existe
         if (prod.getIdCliente() == null) {
             if (prod.getInfraestructura() != null) {
                 Optional<Infraestructura> infr = infraestructuraService
@@ -67,7 +70,6 @@ public class ClienteService {
     }
 
     public Cliente update(Cliente prod) {
-
         // SE CONSULTA POR ID, para actualizar un nombre si toca con el id
         if (prod.getIdCliente() != null) {
             Optional<Cliente> pro = clienteService.getId(prod.getIdCliente());
@@ -95,9 +97,12 @@ public class ClienteService {
                 if (prod.getInfraestructura() != null) {
                     i = 0;
                     for (Infraestructura ip : prod.getInfraestructura()) {
-                        number = infraestructuraService.findIp(ip.getIp()).get(0).getIdInfraestructura();
-                        prod.getInfraestructura().get(i).setIdInfraestructura(number);
-                        i++;
+                        // validar si existe el equipo
+                        if (infraestructuraService.findIp(ip.getIp()).size() != 0) {
+                            number = infraestructuraService.findIp(ip.getIp()).get(0).getIdInfraestructura();
+                            prod.getInfraestructura().get(i).setIdInfraestructura(number);
+                            i++;
+                        }
                     }
                     pro.get().setInfraestructura(prod.getInfraestructura());
                 }
@@ -116,4 +121,69 @@ public class ClienteService {
         return false;
     }
 
+    public boolean deleteCi(Cliente cli) {
+        if (clienteService.existCliente(cli.getCliente()) != false) {
+            if (infraestructuraService.findIp(cli.getInfraestructura().get(0).getIp()).size() != 0) {
+                Optional<Cliente> pro = clienteService
+                        .getId(clienteService.getByCliente(cli.getCliente()).get(0).getIdCliente());
+                for (int i = 0; i <= pro.get().getInfraestructura().size(); i++) {
+                    if (pro.get().getInfraestructura().get(i).getIp().equals(cli.getInfraestructura().get(0).getIp())) {
+                        pro.get().getInfraestructura().remove(i);
+                        clienteService.save(pro.get());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    // borrar con el nombre
+
+    public Cliente addInfra(Cliente prod) {
+        ipNoRepetidas.clear();
+        if (prod.getCliente() != null) {
+            Optional<Cliente> pro = clienteService
+                    .getId(clienteService.getByCliente(prod.getCliente()).get(0).getIdCliente());
+            if (prod.getCliente() != null) {
+                if (!pro.isEmpty()) {// desde aqui
+                    if (prod.getInfraestructura() != null) {
+                        for (int i = 0; i < prod.getInfraestructura().size(); i++) {
+                            for (int j = 0; j < pro.get().getInfraestructura().size(); j++) {
+                                if (prod.getInfraestructura().get(i).getIp()
+                                        .equals(pro.get().getInfraestructura().get(j).getIp())) {
+                                    conteo++;
+                                    System.out.println();
+                                }
+                            }
+                            if (conteo == 0) {
+                                if (infraestructuraService.findIp(prod.getInfraestructura().get(i).getIp())
+                                        .size() != 0) {
+                                    ipNoRepetidas.add(prod.getInfraestructura().get(i));
+                                }
+
+                            }
+                            conteo = 0;
+                        }
+                        if (!ipNoRepetidas.isEmpty()) {
+                            prod.setInfraestructura(ipNoRepetidas);
+                            prod.getInfraestructura().addAll(pro.get().getInfraestructura());
+                            i = 0;
+
+                            for (Infraestructura ip : prod.getInfraestructura()) {
+                                if (infraestructuraService.findIp(ip.getIp()).size() != 0) {
+                                    number = infraestructuraService.findIp(ip.getIp()).get(0).getIdInfraestructura();
+                                    prod.getInfraestructura().get(i).setIdInfraestructura(number);
+                                    i++;
+                                }
+                            }
+                            pro.get().setInfraestructura(prod.getInfraestructura());
+                            return clienteService.save(pro.get());
+                        }
+                    }
+                }
+            }
+        }
+        return prod;
+    }
 }
