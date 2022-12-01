@@ -9,4 +9,6 @@ import com.cmdb.proyectocmdb.Model.Infraestructura;
 public interface InfraestructuraInterface extends CrudRepository<Infraestructura, Long> {
 
     List<Infraestructura> findByIpLike(String ip);
+
+    boolean existsByIp(String infra);
 }

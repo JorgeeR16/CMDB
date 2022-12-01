@@ -23,6 +23,8 @@ public class ClienteService {
     private Long number;
     private int conteo;
     private ArrayList<Infraestructura> ipNoRepetidas = new ArrayList<Infraestructura>();
+    private ArrayList<String> equiposCliente = new ArrayList<String>();
+    private ArrayList<String> clientesByEquipo = new ArrayList<String>();
 
     public List<Cliente> getAll() {
         return clienteService.getAll();
@@ -40,21 +42,53 @@ public class ClienteService {
         return clienteService.findIp(ip);
     }
 
-    public Cliente save(Cliente prod) {// Validar por nombre si ya existe
-        if (prod.getIdCliente() == null) {
-            if (prod.getInfraestructura() != null) {
-                Optional<Infraestructura> infr = infraestructuraService
-                        .getId(prod.getInfraestructura().get(0).getIdInfraestructura());
-                if (!infr.isEmpty()) {
-                    return clienteService.save(prod);
-                }
-            } else {
-                return clienteService.save(prod);
-            }
+    public List<String> getIpListCliente(String ip) {
+        clientesByEquipo.clear();
+        if (!ip.isEmpty()) {
+            List<Infraestructura> infr = infraestructuraService.findIp(ip);
+            if (!infr.isEmpty()) {
+                clientesByEquipo.add("------------Equipo-------------");
+                clientesByEquipo.add("Hostname: " + infr.get(0).getHostname());
+                clientesByEquipo.add("IP: " + infr.get(0).getIp());
+                clientesByEquipo.add("OS: " + infr.get(0).getOs());
+                clientesByEquipo.add("Plataforma: " + infr.get(0).getPlataforma());
+                clientesByEquipo.add("Rol / servicio: " + infr.get(0).getRolServicio());
+                clientesByEquipo.add("Responsable: " + infr.get(0).getResponsable());
+                clientesByEquipo.add("Tipo de equipo: " + infr.get(0).getTipoEquipo());
 
-        } else {
-            Optional<Cliente> pro = clienteService.getId(prod.getIdCliente());
-            if (pro.isEmpty()) {
+                clientesByEquipo.add("-------------------------------");
+                for (Cliente inf : clienteService.findIp(ip)) {
+                    clientesByEquipo.add("Cliente: " + inf.getCliente());
+                }
+            }
+            clientesByEquipo.add("-------------------------------");
+            clientesByEquipo.add("Total clientes: " + clienteService.findIp(ip).size());
+        }
+        return clientesByEquipo;
+    }
+
+    public List<String> clienteInfra(String cli) {
+        equiposCliente.clear();
+        if (cli != null) {
+            Optional<Cliente> pro = clienteService
+                    .getId(clienteService.getByCliente(cli).get(0).getIdCliente());
+            if (!pro.isEmpty()) {
+                for (Infraestructura infr : pro.get().getInfraestructura()) {
+                    equiposCliente.add("Servidor: " + infr.getHostname() + " IP:" + infr.getIp() + " Ambiente: "
+                            + infr.getResponsable());
+                }
+                equiposCliente.add("-------------------------------");
+                equiposCliente.add("Total equipos: " + pro.get().getInfraestructura().size());
+                return equiposCliente;
+            }
+        }
+        return equiposCliente;
+    }
+
+    public Cliente save(Cliente prod) {// Validar por nombre si ya existe
+        if (!clienteService.existCliente(prod.getCliente())) {
+
+            if (prod.getIdCliente() == null) {
                 if (prod.getInfraestructura() != null) {
                     Optional<Infraestructura> infr = infraestructuraService
                             .getId(prod.getInfraestructura().get(0).getIdInfraestructura());
@@ -64,8 +98,23 @@ public class ClienteService {
                 } else {
                     return clienteService.save(prod);
                 }
+
+            } else {
+                Optional<Cliente> pro = clienteService.getId(prod.getIdCliente());
+                if (pro.isEmpty()) {
+                    if (prod.getInfraestructura() != null) {
+                        Optional<Infraestructura> infr = infraestructuraService
+                                .getId(prod.getInfraestructura().get(0).getIdInfraestructura());
+                        if (!infr.isEmpty()) {
+                            return clienteService.save(prod);
+                        }
+                    } else {
+                        return clienteService.save(prod);
+                    }
+                }
             }
         }
+
         return prod;
     }
 

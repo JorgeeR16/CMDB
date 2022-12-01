@@ -42,4 +42,5 @@ public class ClienteRepository {
     public boolean existCliente(String client) {
         return clienteCRUD.existsByCliente(client);
     }
+
 }

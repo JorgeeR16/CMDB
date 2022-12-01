@@ -35,4 +35,8 @@ public class InfraestructuraRepository {
         return infraestructuraCRUD.findByIpLike(ip);
     }
 
+    public boolean existInfra(String infr) {
+        return infraestructuraCRUD.existsByIp(infr);
+    }
+
 }

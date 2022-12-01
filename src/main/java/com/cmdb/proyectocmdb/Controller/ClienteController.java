@@ -27,7 +27,7 @@ import org.springframework.http.HttpStatus;
 
 @RestController
 @Api(value = "clientecontroller", description = "API para el manejo de los clientes")
-@RequestMapping("/api/cliente")
+@RequestMapping("/jers/api/cliente")
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
         RequestMethod.DELETE })
 public class ClienteController {
@@ -62,11 +62,25 @@ public class ClienteController {
         return clienteController.getByCliente(cli);
     }
 
+    @ApiOperation(value = "Se consulta por el cliente para validar que CI estan asociados a este", response = Cliente[].class)
+    @GetMapping("/cliente/{cliente}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> clienteInfra(@PathVariable("cliente") String cli) {
+        return clienteController.clienteInfra(cli);
+    }
+
     @GetMapping("/ip/{ip}")
     @ApiOperation(value = "Se consulta por la IP del CI y nos indica que clientes estan asociados a este equipo", response = Cliente[].class)
     @ResponseStatus(HttpStatus.OK)
     public List<Cliente> getIp(@PathVariable("ip") String ip) {
         return clienteController.getIp(ip);
+    }
+
+    @GetMapping("/cliente/ip/{ip}")
+    @ApiOperation(value = "Se consulta por la IP del CI y nos indica el listado de clientes que estan asociados a este equipo", response = Cliente[].class)
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getIpListCliente(@PathVariable("ip") String ip) {
+        return clienteController.getIpListCliente(ip);
     }
 
     @ApiOperation(value = "Se añade una persona, se puede con o sin indicar su infraestructura", response = Cliente.class)

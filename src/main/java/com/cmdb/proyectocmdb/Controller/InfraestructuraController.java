@@ -27,7 +27,7 @@ import org.springframework.http.HttpStatus;
 
 @RestController
 @Api(value = "infraestructuracontroller", description = "API para el manejo de los CI")
-@RequestMapping("/api/infraestructura")
+@RequestMapping("/jers/api/infraestructura")
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
         RequestMethod.DELETE })
 

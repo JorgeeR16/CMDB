@@ -27,7 +27,18 @@ public class InfraestructuraService {
     }
 
     public Infraestructura save(Infraestructura cat) {
-        return infraestructuraService.save(cat);
+        if (!infraestructuraService.existInfra(cat.getIp())) {
+            if (cat.getIdInfraestructura() == null) {
+                return infraestructuraService.save(cat);
+
+            } else {
+                Optional<Infraestructura> pro = infraestructuraService.getId(cat.getIdInfraestructura());
+                if (pro.isEmpty()) {
+                    return infraestructuraService.save(cat);
+                }
+            }
+        }
+        return cat;
     }
 
     public Infraestructura update(Infraestructura cat) {
