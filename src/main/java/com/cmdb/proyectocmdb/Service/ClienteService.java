@@ -170,6 +170,19 @@ public class ClienteService {
         return false;
     }
 
+    public boolean deleteCliente(String cliente) {
+        if (!cliente.isEmpty()) {
+            Optional<Cliente> pro = clienteService
+                    .getId(clienteService.getByClienteLike(cliente).get(0).getIdCliente());
+            if (!pro.isEmpty()) {
+                clienteService.delete(pro.get());
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     public boolean deleteCi(Cliente cli) {
         if (clienteService.existCliente(cli.getCliente()) != false) {
             if (infraestructuraService.findIp(cli.getInfraestructura().get(0).getIp()).size() != 0) {
@@ -186,8 +199,6 @@ public class ClienteService {
         }
         return false;
     }
-
-    // borrar con el nombre
 
     public Cliente addInfra(Cliente prod) {
         ipNoRepetidas.clear();

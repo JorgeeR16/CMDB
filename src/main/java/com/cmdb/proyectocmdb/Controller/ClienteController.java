@@ -104,11 +104,18 @@ public class ClienteController {
         return clienteController.addInfra(pro);
     }
 
-    @ApiOperation(value = "Se elimina persona", response = Cliente.class)
+    @ApiOperation(value = "Se elimina cliente por id", response = Cliente.class)
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         clienteController.delete(id);
+    }
+
+    @ApiOperation(value = "Se elimina cliente por nombre de cliente", response = Cliente.class)
+    @DeleteMapping("/delete/nombre")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteNombre(@RequestBody Cliente nombre) {
+        clienteController.deleteCliente(nombre.getCliente());
     }
 
     @ApiOperation(value = "Se elimina equipo de Campaña", response = Cliente.class)

@@ -43,4 +43,8 @@ public class ClienteRepository {
         return clienteCRUD.existsByCliente(client);
     }
 
+    public List<Cliente> getByClienteLike(String client) {
+        return clienteCRUD.findByClienteLike(client);
+    }
+
 }
